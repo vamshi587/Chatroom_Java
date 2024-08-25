@@ -4,6 +4,9 @@ WORKDIR /app
 
 COPY . .
 
+# Give execute permission to gradlew
+RUN chmod +x ./gradlew
+
 RUN ./gradlew clean bootJar
 
 # Stage 2: Create the final image
