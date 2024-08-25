@@ -1,5 +1,15 @@
-FROM openjdk:17
-EXPOSE 8080:80
-ARG JAR_FILE=build/libs/ChatRoom-0.0.1.jar
-COPY ${JAR_FILE} ChatRoom-0.0.1.jar
+FROM ubuntu:latest AS build
+
+RUN apt-get update
+RUN apt-get install openjdk-17-jdk -y
+COPY . .
+
+RUN ./gradlew bootJar --no-daemon
+
+FROM openjdk:17-jdk-slim
+
+EXPOSE 8080
+
+COPY --from=build /build/libs/ChatRoom-0.0.1.jar ChatRoom-0.0.1.jar
+
 ENTRYPOINT ["java","-jar","/ChatRoom-0.0.1.jar"]
